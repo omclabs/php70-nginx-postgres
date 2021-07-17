@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  app:
+    build:
+      args:
+        user: www-data
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: web_app:latest
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ${APP_SOURCE}:/var/www/
+      - ./logs/app/:/var/www/storage/logs/
+    networks:
+      - web_network
+
+  nginx:
+    image: nginx:1.21
+    container_name: web_app_server
+    restart: unless-stopped
+    ports:
+      - ${LOCAL_PORT}:80
+    volumes:
+      - ${APP_SOURCE}:/var/www
+      - ./nginx:/etc/nginx/conf.d/
+      - ./logs/nginx/:/var/log/nginx/
+    networks:
+      - web_network
+
+  db:
+    image: postgres:12.7
+    container_name: web_app_db
+    restart: unless-stopped
+    ports:
+      - 55432:5432
+    env_file:
+      - .env
+    volumes:
+      - ./db:/var/lib/postgresql/data/
+    networks:
+      - web_network
+
+networks:
+  web_network:
+    driver: bridge
