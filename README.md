@@ -12,7 +12,7 @@ Docker for development environment using Laravel
 - copy and configure `.env` from `.env.example`
 - copy and configure `/nginx/web.conf` from `/nginx/web.conf`
 - run `sudo docker-compose build app` to create app image from dockerfile
-- run `sudo docker-compose up -d` or run `sudo docker-compose up -d --scale app=[xx]`
+- run `sudo docker-compose up -d`
 
 # Laravel
 

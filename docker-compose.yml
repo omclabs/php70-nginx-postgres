@@ -9,17 +9,20 @@ services:
       context: ./
       dockerfile: Dockerfile
     image: lms_web:latest
+    container_name: ${APP_CONTAINER_NAME}
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
       - ${APP_SOURCE}:/var/www/
       # - ./logs/app/:/var/www/storage/logs/
     networks:
-      - local
+      local:
+        ipv4_address: ${APP_IPV4}
+
 
   nginx:
     image: nginx:1.21
-    container_name: web_app_server
+    container_name: ${NGINX_CONTAINER_NAME}
     restart: unless-stopped
     ports:
       - ${LOCAL_PORT}:80
@@ -28,7 +31,8 @@ services:
       - ./nginx:/etc/nginx/conf.d/
       # - ./logs/nginx/:/var/log/nginx/
     networks:
-      - local
+     local:
+      ipv4_address: ${NGINX_IPV4}
 
 networks:
   local:
